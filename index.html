@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=f85d518c-2c37-438f-b32c-3aa06e00afc7
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nihongo Michi — Belajar Bahasa Jepang N5–N1</title>
+<meta name="description" content="Belajar mandiri bahasa Jepang N5 sampai N1, offline.">
+<meta name="theme-color" content="#f6f2ec">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Michi">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="#/" aria-label="Beranda">
+      <span class="seal" aria-hidden="true">道</span>
+      <span><b>Nihongo Michi</b><small>日本語の道</small></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="#/" data-r="">Beranda</a>
+      <a href="#/rencana" data-r="rencana">Rencana belajar</a>
+      <a href="#/belajar" data-r="belajar">Teori</a>
+      <a href="#/kartu" data-r="kartu">Kartu ulang</a>
+      <a href="#/aksel" data-r="aksel">Akselerator 80/20</a>
+      <a href="#/latihan" data-r="latihan">Latihan</a>
+      <a href="#/ujian" data-r="ujian">Ujian</a>
+      <a href="#/harian" data-r="harian">Sehari-hari</a>
+      <a href="#/bicara" data-r="bicara">Dialog per level</a>
+      <a href="#/tonton" data-r="tonton">Tonton</a>
+      <a href="#/lainnya" data-r="lainnya">Panduan &amp; setelan</a>
+    </nav>
+    <p class="side-foot"><span id="netdot" class="dot"></span><span id="nettxt">offline-ready</span></p>
+  </aside>
+  <div class="col">
+    <header class="topbar">
+      <a class="brand" href="#/" aria-label="Beranda"><span class="seal" aria-hidden="true">道</span><b>Michi</b></a>
+      <span class="net"><span id="netdot2" class="dot"></span></span>
+      <a class="gear" href="#/lainnya" data-r="lainnya" aria-label="Panduan dan setelan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </a>
+    </header>
+    <main id="view" tabindex="-1"></main>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Navigasi">
+  <a href="#/" data-r=""><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg><span>Beranda</span></a>
+  <a href="#/belajar" data-r="belajar"><svg viewBox="0 0 24 24"><path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3zM4 17a3 3 0 0 1 3-3h12"/></svg><span>Teori</span></a>
+  <a href="#/kartu" data-r="kartu"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="14" height="13" rx="2"/><path d="M7 4h13a1 1 0 0 1 1 1v12"/></svg><span>Kartu</span></a>
+  <a href="#/aksel" data-r="aksel"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>80/20</span></a>
+  <a href="#/latihan" data-r="latihan"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M16 15l2 2 4-4"/></svg><span>Latihan</span></a>
+  <a href="#/ujian" data-r="ujian"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg><span>Ujian</span></a>
+  <a href="#/menu" data-r="menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Menu</span></a>
+</nav>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="data/n5.js"></script>
+<script src="data/n4.js"></script>
+<script src="data/n3.js"></script>
+<script src="data/n2.js"></script>
+<script src="data/n1.js"></script>
+<script src="data/n5-plus.js"></script>
+<script src="data/n4-plus.js"></script>
+<script src="data/n3-plus.js"></script>
+<script src="data/n2-plus.js"></script>
+<script src="data/n1-plus.js"></script>
+<script src="data/n5-more-a.js"></script>
+<script src="data/n5-more-b.js"></script>
+<script src="data/n5-more-c.js"></script>
+<script src="data/n4-more-a.js"></script>
+<script src="data/n4-more-b.js"></script>
+<script src="data/n4-more-c.js"></script>
+<script src="data/n3-more-a1.js"></script>
+<script src="data/n3-more-a2.js"></script>
+<script src="data/n3-more-b.js"></script>
+<script src="data/n3-more-c.js"></script>
+<script src="data/n2-more-a1.js"></script>
+<script src="data/n2-more-a2.js"></script>
+<script src="data/n2-more-b.js"></script>
+<script src="data/n2-more-c.js"></script>
+<script src="data/n1-more-a1.js"></script>
+<script src="data/n1-more-a2.js"></script>
+<script src="data/n1-more-b.js"></script>
+<script src="data/n1-more-c.js"></script>
+<script src="data/daily-4.js"></script>
+<script src="data/daily-5.js"></script>
+<script src="data/n5-more-d.js"></script>
+<script src="data/n5-more-e.js"></script>
+<script src="data/n5-more-f.js"></script>
+<script src="data/n5-more-g.js"></script>
+<script src="data/n4-more-d.js"></script>
+<script src="data/n4-more-e.js"></script>
+<script src="data/n4-more-f.js"></script>
+<script src="data/n4-more-g.js"></script>
+<script src="data/n3-more-d.js"></script>
+<script src="data/n3-more-e.js"></script>
+<script src="data/n3-more-f.js"></script>
+<script src="data/n3-more-g.js"></script>
+<script src="data/n2-more-d.js"></script>
+<script src="data/n2-more-e.js"></script>
+<script src="data/n2-more-f.js"></script>
+<script src="data/n2-more-g.js"></script>
+<script src="data/n1-more-d.js"></script>
+<script src="data/n1-more-e.js"></script>
+<script src="data/n1-more-f.js"></script>
+<script src="data/n1-more-g.js"></script>
+<script src="data/phrases.js"></script>
+<script src="data/daily-1.js"></script>
+<script src="data/daily-2.js"></script>
+<script src="data/daily-3.js"></script>
+<script src="data/kana.js"></script>
+<script src="data/videos.js"></script>
+<script src="data/format.js"></script>
+<script src="data/akselerator.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
