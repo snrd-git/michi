@@ -86,14 +86,43 @@ let timer = null;
 const clearTimer = () => { if (timer) { clearInterval(timer); timer = null; } };
 const ui = { tab:'v', ctype:'all', tr:true, blur:false };
 const routes = { format:vFormat, '':vDash, belajar:vLearn, kartu:vCards, aksel:vAksel, latihan:vPractice, ujian:vExam, rencana:vPlan, menu:vMenu, pasang:vInstall, bicara:vTalk, harian:vDaily, tonton:vVideo, lainnya:vMore };
+/* ---- rasa aplikasi: judul nav bar, tombol kembali, animasi halaman ---- */
+const TITLES = { '':'Beranda', belajar:'Teori', kartu:'Kartu ulang', aksel:'Akselerator', latihan:'Latihan', ujian:'Ujian', menu:'Menu', rencana:'Rencana belajar', pasang:'Pasang aplikasi', lainnya:'Setelan', format:'Format ujian', harian:'Sehari-hari', bicara:'Dialog', tonton:'Tonton' };
+const PARENT = { format:'ujian', rencana:'menu', pasang:'menu', lainnya:'menu', harian:'menu', bicara:'menu', tonton:'menu' };
+let prevRoute = null;
+const navParent = (r, sub) => sub && (r === 'harian' || r === 'bicara') ? r : PARENT[r];
+function navUpdate(r, sub) {
+  const par = navParent(r, sub), back = $('#navback'), h = view.querySelector('h1');
+  if (back) { back.hidden = par == null; back.dataset.to = par == null ? '' : '#/' + par; $('#navbacklbl').textContent = par == null ? '' : TITLES[par] || 'Kembali'; }
+  const tt = $('#navtitle'); if (tt) { const ht = h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; tt.textContent = ht && ht.length <= 22 ? ht : (TITLES[r] || ht || 'Michi'); }
+  navScroll();
+}
+function navScroll() { const tb = $('#topbar'); if (!tb) return; const h = view.querySelector('.pagehead h1'); const y = window.scrollY;
+  tb.classList.toggle('solid', y > 4); tb.classList.toggle('showtitle', !h || h.getBoundingClientRect().bottom < tb.getBoundingClientRect().bottom + 4); }
+window.addEventListener('scroll', navScroll, { passive:true });
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+function animView(r, sub) {
+  const key = r + (sub ? '/' + sub : ''); let cls = 'vfade';
+  if (prevRoute != null && prevRoute !== key) { const [pr, ps] = prevRoute.split('/');
+    if (navParent(r, sub) === pr && !(r === pr && !sub)) cls = 'vpush'; else if (navParent(pr, ps) === r && !(pr === r && !ps)) cls = 'vpop'; else if (r === pr && sub && !ps) cls = 'vpush'; else if (r === pr && !sub && ps) cls = 'vpop'; }
+  if (prevRoute !== key) { view.classList.remove('vfade', 'vpush', 'vpop'); void view.offsetWidth; view.classList.add(cls); }
+  prevRoute = key;
+}
+function installBanner(r) {
+  if (r === 'pasang' || typeof installed !== 'function' || installed()) return '';
+  const d = devKind(); if (d.os === 'desktop') return '';
+  if (S.ibHide && dayIdx() - S.ibHide < 7) return '';
+  return `<div class="ibanner"><span class="ib-ic">道</span><a href="#/pasang"><b>Pasang Michi di layar utama</b><small>Layar penuh tanpa bilah browser, bisa offline</small></a><button class="ib-x" data-act="ibhide" aria-label="Tutup">✕</button></div>`;
+}
 function render() {
   clearTimer(); Q = null;
   const [r, sub] = location.hash.replace(/^#\/?/, '').split('/');
   const fn = routes[r] || vDash;
   document.querySelectorAll('#nav a,#tabbar a,.gear').forEach(a => a.classList.toggle('on', a.dataset.r === (routes[r] ? (r === 'format' ? 'ujian' : r) : '')));
-  view.innerHTML = fn(sub);
+  view.innerHTML = installBanner(routes[r] ? r : '') + fn(sub);
   window.scrollTo(0, 0);
   if (r === 'bicara' && sub) curConvo = findConvo(sub);
+  navUpdate(routes[r] ? r : '', sub); animView(routes[r] ? r : '', sub);
 }
 window.addEventListener('hashchange', render);
 
@@ -509,7 +538,9 @@ function vMore() {
 
 /* ---------- actions ---------- */
 const acts = {
-  lv(el) { S.level = el.dataset.v; save(); C = null; render(); },
+  lv(el) { S.level = el.dataset.v; save(); C = null; const y = window.scrollY; render(); window.scrollTo(0, y); navScroll(); },
+  navback(el) { const to = el.dataset.to || '#/'; if (location.hash !== to) location.hash = to; },
+  ibhide(el, e) { e.preventDefault(); S.ibHide = dayIdx(); save(); const b = el.closest('.ibanner'); if (b) b.remove(); },
   say(el, e) { e.preventDefault(); e.stopPropagation(); say(el.dataset.t); },
   none() {},
   pmode(el) { ui.plist = el.dataset.v === 'list'; ui.pquiet = true; render(); },

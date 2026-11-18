@@ -1,4 +1,4 @@
-const CACHE = 'nihongo-michi-v15';
+const CACHE = 'nihongo-michi-v16';
 const FILES = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png',
   'data/n5.js', 'data/n4.js', 'data/n3.js', 'data/n2.js', 'data/n1.js',
