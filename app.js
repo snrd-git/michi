@@ -83,7 +83,7 @@ let C = null; // card session
 let timer = null;
 const clearTimer = () => { if (timer) { clearInterval(timer); timer = null; } };
 const ui = { tab:'v', ctype:'all', tr:true, blur:false };
-const routes = { format:vFormat, '':vDash, belajar:vLearn, kartu:vCards, aksel:vAksel, latihan:vPractice, ujian:vExam, rencana:vPlan, menu:vMenu, bicara:vTalk, harian:vDaily, tonton:vVideo, lainnya:vMore };
+const routes = { format:vFormat, '':vDash, belajar:vLearn, kartu:vCards, aksel:vAksel, latihan:vPractice, ujian:vExam, rencana:vPlan, menu:vMenu, pasang:vInstall, bicara:vTalk, harian:vDaily, tonton:vVideo, lainnya:vMore };
 function render() {
   clearTimer(); Q = null;
   const [r, sub] = location.hash.replace(/^#\/?/, '').split('/');
@@ -581,7 +581,7 @@ const acts = {
   qredo() { const w = Q.wrong, o = Q; startQuiz({ title:'Ulangi yang salah', qs:w, mode:'practice', lv:o.lv }); },
   qdone(el, e) { e.preventDefault(); location.hash = (Q && Q.back) || '#/latihan'; render(); },
   export() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(S)], { type:'application/json' })); a.download = `nihongo-michi-${dayKey()}.json`; a.click(); },
-  install() { if (deferred) { deferred.prompt(); deferred = null; } else toast('Gunakan menu browser: Pasang aplikasi / Tambahkan ke layar utama'); },
+  install() { if (deferred) { deferred.prompt(); deferred.userChoice.then(c => { if (c.outcome === 'accepted') toast('Michi dipasang'); }); deferred = null; } else if (installed()) toast('Michi sudah terpasang di perangkat ini'); else { if (!location.hash.startsWith('#/pasang')) location.hash = '#/pasang'; toast('Ikuti langkah di halaman ini'); } },
   reset() { if (confirm('Hapus semua progres? Tindakan ini tidak bisa dibatalkan.')) { localStorage.removeItem(KEY); S = Object.assign({}, def, { days:{}, srs:{}, tests:[], gram:{}, talk:{}, acc:{}, wrong:{}, vids:[], custom:[], daily:{ dl:{}, rp:{} }, official:[] }); save(); C = null; applyTheme(); render(); toast('Progres dihapus'); } }
 };
 document.addEventListener('click', e => { const nv = e.target.closest('#nav a,#tabbar a,.brand,.gear'); if (nv && nv.getAttribute('href') === (location.hash || '#/')) { clearTimer(); render(); } });
@@ -1082,7 +1082,7 @@ function vPlan() {
 /* ---- Menu (ponsel) ---- */
 function vMenu() {
   const L = [['#/rencana', 'Rencana belajar', 'Fase, target pekan ini, tipe soal terlemah'], ['#/kartu', 'Kartu ulang', 'Kosakata & kanji dengan pengulangan berjarak'], ['#/aksel', 'Akselerator 80/20', 'Rutinitas 20 menit, kanji, papan tulis'],
-    ['#/harian', 'Sehari-hari', 'Frasa & roleplay situasi nyata'], ['#/bicara', 'Dialog per level', 'Percakapan dengan suara'], ['#/tonton', 'Tonton', 'Daftar video belajar'], ['#/format', 'Format ujian', 'Struktur, waktu, batas lulus'], ['#/lainnya', 'Panduan & setelan', 'Tema, cadangan progres, pasang aplikasi']];
+    ['#/harian', 'Sehari-hari', 'Frasa & roleplay situasi nyata'], ['#/bicara', 'Dialog per level', 'Percakapan dengan suara'], ['#/tonton', 'Tonton', 'Daftar video belajar'], ['#/format', 'Format ujian', 'Struktur, waktu, batas lulus'], ['#/lainnya', 'Panduan & setelan', 'Tema, cadangan progres'], ['#/pasang', 'Pasang aplikasi', 'Tautan untuk Android, iPhone, iPad']];
   return `<header class="pagehead"><div><p class="eyebrow">Menu</p><h1>Semua fitur</h1></div></header><div class="mgrid">${L.map(x => `<a href="${x[0]}"><b>${x[1]}</b><small>${x[2]}</small></a>`).join('')}</div>`;
 }
 
@@ -1108,6 +1108,51 @@ function dashExam(lv) {
   return `<section class="two"><div><div class="sec-h"><h2>Perkiraan skor ${lv}</h2><a class="link" href="#/ujian">Ujian →</a></div>${last ? `<div class="exscore ${last.pass ? 'pass' : 'fail'} compact"><div><b class="num">${last.total}</b><small>/180</small></div><div><span class="badge">${last.pass ? 'Lulus (perkiraan)' : 'Belum lulus'}</span><p class="tiny" style="margin:4px 0 0">${last.d} · ${last.mini ? 'mini' : 'penuh'} · batas ${PASS[lv]}</p></div></div>` : `<div class="empty">Belum ada skor. <a class="link" href="#/ujian">Coba ujian mini</a> untuk melihat posisimu.</div>`}</div>
   <div><div class="sec-h"><h2>Rencana belajar</h2><a class="link" href="#/rencana">Buka →</a></div><div class="card" style="padding:14px 16px">${w ? `Tipe soal terlemah: <b class="jp">${w.name}</b> ${w.pct < 0 ? '(belum dicoba)' : '(' + Math.round(w.pct * 100) + '%)'}<br><button class="btn ghost" style="margin-top:8px" data-act="qtype" data-s="${w.s}">Latih sekarang</button>` : 'Atur tanggal ujian untuk mendapat target pekanan.'}</div></div></section>`;
 }
+
+/* ---------- halaman Pasang aplikasi (Android / iPhone / iPad / komputer) ---------- */
+const APP_URL = 'https://snrd-git.github.io/michi/';
+const devKind = () => {
+  const ua = navigator.userAgent || '', iOS = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (iOS) return { os:'ios', safari:/Safari/.test(ua) && !/CriOS|FxiOS|EdgiOS|GSA|Instagram|FBAN|Line\//.test(ua) };
+  if (/Android/.test(ua)) return { os:'android' };
+  return { os:'desktop' };
+};
+const installed = () => (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+const SHARE_ICON = '<svg class="ishare" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>';
+const ADD_ICON = '<svg class="ishare" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+function vInstall() {
+  const d = devKind(), on = installed();
+  const step = (n, t, s) => `<div class="istep"><span class="inum">${n}</span><div><b>${t}</b>${s ? `<small>${s}</small>` : ''}</div></div>`;
+  const ios = `<div class="card ibox"><h3> iPhone &amp; iPad</h3>
+    ${d.os === 'ios' && !d.safari ? '<p class="note" style="margin:8px 0">Kamu sedang membuka lewat aplikasi lain. Buka tautan ini di <b>Safari</b> dulu (ketuk ••• atau ikon kompas → Buka di Safari).</p>' : ''}
+    ${step(1, `Ketuk tombol Bagikan ${SHARE_ICON}`, 'Di bawah layar (iPhone) atau kanan atas (iPad), di Safari.')}
+    ${step(2, `Pilih “Tambahkan ke Layar Utama” ${ADD_ICON}`, 'Gulir daftar ke bawah bila belum terlihat. Di iOS 26: ••• → Bagikan → Tambahkan ke Layar Utama.')}
+    ${step(3, 'Ketuk “Tambah”', 'Ikon 道 Michi muncul di layar utama. Buka dari ikon itu: tampil layar penuh dan bisa offline.')}</div>`;
+  const android = `<div class="card ibox"><h3>Android</h3>
+    <button class="btn ibtn" data-act="install" ${deferred ? '' : 'data-fallback="1"'}>Pasang aplikasi</button>
+    <p class="tiny" style="margin:8px 0 12px">Bila tombol tidak memunculkan jendela pasang:</p>
+    ${step(1, 'Buka di Chrome', 'Atau Edge / Samsung Internet.')}
+    ${step(2, 'Ketuk menu ⋮ kanan atas', '')}
+    ${step(3, 'Pilih “Instal aplikasi” atau “Tambahkan ke layar utama”', 'Ikon Michi masuk ke laci aplikasi dan bisa offline.')}</div>`;
+  const desk = `<div class="card ibox"><h3>Komputer (Chrome / Edge)</h3>
+    <button class="btn ibtn" data-act="install">Pasang di komputer ini</button>
+    <p class="tiny" style="margin:8px 0 0">Atau klik ikon pasang ⊕ di ujung kanan kolom alamat.</p></div>`;
+  const order = d.os === 'ios' ? [ios, android] : d.os === 'android' ? [android, ios] : [desk, ios, android];
+  return `<header class="pagehead"><div><p class="eyebrow">Pasang aplikasi</p><h1>Michi di ponselmu</h1><p>Gratis, tanpa App Store atau Play Store. Setelah dipasang, Michi terbuka layar penuh dari ikon di layar utama dan tetap jalan tanpa internet.</p></div></header>
+  ${on ? '<div class="card ibox iok"><b>✓ Sudah terpasang</b><small>Kamu sedang membuka Michi sebagai aplikasi.</small></div>' : ''}
+  <div class="card ibox ilink"><div><span class="tiny">Tautan untuk dibagikan</span><b class="iurl">${APP_URL.replace('https://', '')}</b></div>
+    <div class="ibtns"><button class="btn ghost" data-act="icopy">Salin</button>${navigator.share ? '<button class="btn ghost" data-act="ishare">Bagikan</button>' : ''}</div></div>
+  ${order.join('')}
+  <section><div class="sec-h"><h2>Pindah perangkat</h2></div><div class="card ibox">
+    ${step(1, 'Progres tersimpan di masing-masing perangkat', 'Tidak tersinkron otomatis antara ponsel, iPad, dan komputer.')}
+    ${step(2, 'Perangkat lama: Panduan &amp; setelan → Ekspor', 'Kirim berkas .json itu ke perangkat baru (AirDrop, email, Drive).')}
+    ${step(3, 'Perangkat baru: Panduan &amp; setelan → Impor', '')}
+    <a class="btn ghost" href="#/lainnya" style="margin-top:10px;display:inline-block">Buka Panduan &amp; setelan</a></div></section>`;
+}
+Object.assign(acts, {
+  icopy() { const done = () => toast('Tautan disalin'); if (navigator.clipboard) navigator.clipboard.writeText(APP_URL).then(done, () => prompt('Salin tautan ini:', APP_URL)); else prompt('Salin tautan ini:', APP_URL); },
+  ishare() { navigator.share({ title:'Nihongo Michi', text:'Belajar bahasa Jepang N5–N1, bisa offline', url:APP_URL }).catch(() => {}); }
+});
 
 /* swipe pada kartu: kanan = Baik, kiri = Lagi (setelah dibalik) */
 let tx = null;

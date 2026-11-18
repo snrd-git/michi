@@ -416,3 +416,243 @@ a.prow{grid-template-columns:1fr auto}
 .mgrid a{display:block;padding:16px;border:1px solid var(--line);border-radius:var(--r,10px);background:var(--card);color:var(--ink);text-decoration:none}
 .mgrid a small{display:block;color:var(--ink2);font-size:.82rem;margin-top:4px}
 @media (max-width:760px){.quickrow{grid-template-columns:repeat(2,1fr)}.phase{flex-direction:column}.phase .ph{flex:none!important}.phase em{display:none}.prow .pm{display:none}.prow{grid-template-columns:1fr auto}}
+
+/* =====================================================================
+   TAMPILAN iOS — warna sistem, judul besar, daftar berkelompok, segmented
+   control, tab bar transparan-blur. Blok ini menimpa gaya di atas.
+   ===================================================================== */
+:root{
+  --paper:#f2f2f7; --paper2:rgba(118,118,128,.12); --card:#fff; --ink:#000; --ink2:rgba(60,60,67,.6); --ink3:#8e8e93;
+  --line:rgba(60,60,67,.18); --sep:rgba(60,60,67,.29); --fill:rgba(118,118,128,.12);
+  --shu:#007aff; --shu-bg:rgba(0,122,255,.12); --tint:#007aff;
+  --moss:#34c759; --moss-bg:rgba(52,199,89,.15); --gold:#ff9500; --red:#ff3b30; --gtext:#248a3d; --rtext:#d70015;
+  --bar:rgba(249,249,249,.92); --seg-on:#fff;
+  --serif:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Hiragino Sans","Yu Gothic UI",sans-serif;
+  --jp:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Yu Gothic","Noto Sans JP","Meiryo",sans-serif;
+  --r:12px;
+}
+:root[data-theme="dark"]{
+  --paper:#000; --paper2:rgba(118,118,128,.24); --card:#1c1c1e; --ink:#fff; --ink2:rgba(235,235,245,.6); --ink3:#8e8e93;
+  --line:rgba(84,84,88,.6); --sep:rgba(84,84,88,.65); --fill:rgba(118,118,128,.24);
+  --shu:#0a84ff; --shu-bg:rgba(10,132,255,.2); --tint:#0a84ff;
+  --moss:#30d158; --moss-bg:rgba(48,209,88,.2); --gold:#ff9f0a; --red:#ff453a; --gtext:#30d158; --rtext:#ff453a;
+  --bar:rgba(22,22,24,.9); --seg-on:#636366;
+}
+@media (prefers-color-scheme:dark){
+  :root[data-theme="auto"]{
+    --paper:#000; --paper2:rgba(118,118,128,.24); --card:#1c1c1e; --ink:#fff; --ink2:rgba(235,235,245,.6); --ink3:#8e8e93;
+    --line:rgba(84,84,88,.6); --sep:rgba(84,84,88,.65); --fill:rgba(118,118,128,.24);
+    --shu:#0a84ff; --shu-bg:rgba(10,132,255,.2); --tint:#0a84ff;
+    --moss:#30d158; --moss-bg:rgba(48,209,88,.2); --gold:#ff9f0a; --red:#ff453a; --gtext:#30d158; --rtext:#ff453a;
+    --bar:rgba(22,22,24,.9); --seg-on:#636366;
+  }
+}
+*{-webkit-tap-highlight-color:transparent}
+body{font:17px/1.4 var(--sans);letter-spacing:-.01em;background:var(--paper)}
+h1,h2,h3{font-family:var(--serif);letter-spacing:-.015em}
+h1{font-size:34px;line-height:41px;font-weight:700}
+h2{font-size:22px;font-weight:700}
+h3{font-size:17px;font-weight:600}
+.tiny{color:var(--ink3);font-size:13px}
+.muted{color:var(--ink2)}
+:focus-visible{outline:2px solid var(--tint)}
+a.link,button.link,.link{color:var(--tint);text-decoration:none;font-weight:400}
+
+/* ---------- sidebar (desktop/iPad) ---------- */
+.side{border-right:.5px solid var(--sep);background:var(--paper);padding:24px 14px}
+.brand b{font:700 1.05rem var(--serif)}
+.seal{border-radius:9px;transform:none;background:linear-gradient(160deg,#ff5e57,#e0352b);font-size:1.3rem;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.nav a{border-left:0;border-radius:10px;padding:9px 12px;color:var(--ink);font-size:15px}
+.nav a:hover{background:var(--fill)}
+.nav a.on{background:var(--tint);color:#fff;font-weight:600}
+
+/* ---------- judul halaman = Large Title ---------- */
+.pagehead{border-bottom:0;padding-bottom:4px;margin-bottom:18px;align-items:flex-end}
+.pagehead p{color:var(--ink2);font-size:15px;line-height:1.4}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--tint);margin-bottom:2px}
+.greet{color:var(--ink2);font-size:15px}
+.sec-h{margin-bottom:8px;align-items:baseline}
+.sec-h h2{font-size:20px}
+section+section{margin-top:28px}
+
+/* ---------- kartu & grup ---------- */
+.card{background:var(--card);border:0;border-radius:12px;box-shadow:none}
+.stat{background:var(--card);border:0;border-radius:12px}
+.stat b{font-family:var(--sans);font-weight:700}
+.stat span{color:var(--ink2);font-size:13px}
+.empty{border:0;background:var(--card);border-radius:12px;color:var(--ink2)}
+.note{background:var(--card);border-left:0;border-radius:12px;color:var(--ink2);font-size:15px}
+
+/* ---------- tombol ---------- */
+.btn{border-radius:12px;font-weight:600;font-size:17px;border:0;background:var(--tint);color:#fff;padding:12px 20px}
+.btn:hover{filter:brightness(1.05);background:var(--tint)}
+.btn.shu{background:var(--tint);color:#fff}
+.btn.ghost{background:var(--fill);color:var(--tint)}
+.btn.ghost:hover{background:var(--paper2)}
+.btn[disabled],.btn:disabled{opacity:.4}
+
+/* ---------- segmented control: pilihan level & tab ---------- */
+.chips[role="group"]{display:inline-flex;flex-wrap:nowrap;gap:0;background:var(--fill);border-radius:9px;padding:2px}
+.chips[role="group"] .chip{border:0;background:none;border-radius:7px;padding:6px 14px;font-size:13px;font-weight:500;min-height:0;color:var(--ink)}
+.chips[role="group"] .chip.on{background:var(--seg-on);color:var(--ink);font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04)}
+.chips[role="group"] .tiny{padding:0 8px}
+.chip{border:0;background:var(--fill);color:var(--ink);border-radius:999px;font-size:14px;padding:6px 14px}
+.chip:hover{background:var(--paper2)}
+.chip.on{background:var(--tint);color:#fff}
+.tabs{display:flex;gap:0;border-bottom:0;background:var(--fill);border-radius:9px;padding:2px;overflow-x:auto;scrollbar-width:none;margin-bottom:18px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto;border:0;margin:0;padding:6px 12px;border-radius:7px;font-size:13px;font-weight:500;color:var(--ink)}
+.tabs button.on{background:var(--seg-on);border:0;font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.12),0 3px 1px rgba(0,0,0,.04)}
+
+/* ---------- daftar berkelompok (inset grouped list) ---------- */
+.plan{padding:0;overflow:hidden}
+.plan-h{padding:14px 16px 6px}
+.task,.rowl,.lvl,.set{position:relative;border:0;background:var(--card)}
+.task{padding:11px 16px;min-height:44px}
+.task+.task::before,.rowl+.rowl::before,.lvl+.lvl::before,.set+.set::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:.5px solid var(--sep)}
+.task:hover,.lvl:hover{background:var(--fill)}
+.task .go{color:var(--ink3);font-size:15px}
+.task .check{border-color:var(--sep)}
+.task.done .check{background:var(--moss);border-color:var(--moss)}
+.rowl{padding:11px 16px;border-bottom:0}
+.rowl:first-of-type{border-radius:12px 12px 0 0}.rowl:last-of-type{border-radius:0 0 12px 12px}.rowl:only-of-type{border-radius:12px}
+.set{padding:11px 16px;border-bottom:0}
+.set:first-of-type{border-radius:12px 12px 0 0}.set:last-of-type{border-radius:0 0 12px 12px}
+.lvl{border:0;border-radius:0;padding:12px 16px}
+.lvl:first-of-type{border-radius:12px 12px 0 0}.lvl:last-of-type{border-radius:0 0 12px 12px}
+.lvl.cur{background:var(--card)}
+.lvl.cur .stamp{background:var(--tint);color:#fff;border-color:var(--tint)}
+.stamp{border-radius:6px;border-color:var(--sep)}
+.bar,.prog,.pbar{background:var(--fill);border-radius:99px}
+.bar i,.prog i{background:var(--tint);border-radius:99px}
+.pbar i.ok{background:var(--moss)}.pbar i.mid{background:var(--gold)}.pbar i.low{background:var(--red)}
+.sb-track i{background:var(--moss)}.sb-track i.low{background:var(--red)}
+select{border:0;background:var(--fill);border-radius:8px;color:var(--ink)}
+.search,textarea.search{border:0;background:var(--fill);border-radius:10px;color:var(--ink)}
+
+/* mode/menu tiles → sel daftar */
+.mode{border:0;border-radius:12px;background:var(--card)}
+.mode:hover{background:var(--card);box-shadow:inset 0 0 0 1px var(--sep)}
+.mode b{font:600 17px var(--sans)}
+.mode span{color:var(--ink2);font-size:13px}
+.mode.feat{background:var(--tint);color:#fff}
+.mode.feat span{color:rgba(255,255,255,.85);opacity:1}
+.prow,.qk,.mgrid a,.tcard,.vcard,.clist a,.clist button{border:0;border-radius:12px;background:var(--card)}
+.prow:hover,.qk:hover{border:0;box-shadow:inset 0 0 0 1px var(--sep)}
+.prow .pv{color:var(--ink)}
+.phase .ph{background:var(--fill)}.phase .ph.on{background:var(--shu-bg)}.phase em{background:var(--tint)}
+
+/* ---------- belajar ---------- */
+.vrow{border-bottom:.5px solid var(--sep)}
+.kt{border:0;border-radius:12px;background:var(--card)}
+.kt .rd{color:var(--tint)}
+details.g{border:0;border-radius:12px;background:var(--card);margin-bottom:8px;padding:0 4px}
+details.g summary{padding:12px}
+.ex .jp{font-size:17px}
+.say{color:var(--tint);border-color:transparent;background:var(--fill)}
+
+/* ---------- kartu ulang ---------- */
+.flash{border:0;border-radius:16px;background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.flash .ans{border-top:.5px solid var(--sep)}
+.flash .ans .rd{color:var(--tint)}
+.rate button{border:0;border-radius:12px;background:var(--card);font-weight:600}
+.rate button:nth-child(1) b{color:var(--red)}.rate button:nth-child(2) b{color:var(--gold)}.rate button:nth-child(3) b{color:var(--moss)}.rate button:nth-child(4) b{color:var(--tint)}
+
+/* ---------- kuis & ujian ---------- */
+.qbar{font-size:15px}
+.qlabel{color:var(--ink2);font-size:13px;font-weight:600;letter-spacing:0;text-transform:none}
+.qtext{font-size:19px}
+.passage{background:var(--card);border:0;border-radius:12px}
+.opts{gap:0;border-radius:12px;overflow:hidden;background:var(--card)}
+.opt{border:0;border-radius:0;background:var(--card);position:relative;margin:0;font-size:17px}
+.opt+.opt::before{content:"";position:absolute;top:0;left:52px;right:0;border-top:.5px solid var(--sep)}
+.opt:hover{background:var(--fill)}
+.opt i{background:var(--fill);color:var(--ink2);border:0;border-radius:50%;font-style:normal}
+.opt.on{background:var(--shu-bg)}.opt.on i{background:var(--tint);color:#fff}
+.opt.ok{background:var(--moss-bg)}.opt.ok i{background:var(--moss);color:#fff}
+.opt.bad{background:rgba(255,59,48,.12)}.opt.bad i{background:var(--red);color:#fff}
+.fb{border:0;border-radius:12px;background:var(--card)}
+.tag{border-radius:6px;border:0;background:var(--fill)}
+.tag.ok{background:var(--moss-bg);color:var(--gtext)}.tag.bad{background:rgba(255,59,48,.12);color:var(--rtext)}
+.rev{background:var(--card);border:0;border-radius:12px;padding:12px 16px;margin-bottom:8px}
+.tm.low{color:var(--red)}
+.qgrid{border:0;background:var(--card);border-radius:12px}
+.qgrid button{border:0;background:var(--fill);border-radius:8px}
+.qgrid button.ans{background:var(--shu-bg);color:var(--tint)}
+.qgrid button.flag{box-shadow:inset 0 -3px 0 var(--gold)}
+.qgrid button.cur{outline:2px solid var(--tint)}
+.exscore{border:0;border-radius:14px}
+.exscore .badge{background:rgba(255,59,48,.12);color:var(--rtext)}
+.exscore.pass{box-shadow:inset 0 0 0 1.5px var(--moss)}.exscore.pass .badge{background:var(--moss-bg);color:var(--gtext)}
+b.okc{color:var(--gtext)}
+.toast{background:rgba(30,30,30,.9);color:#fff;border-radius:14px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+table{background:var(--card);border-radius:12px;overflow:hidden}
+th,td{border-bottom:.5px solid var(--sep)}
+th{font:600 12px var(--sans);letter-spacing:0;text-transform:uppercase;color:var(--ink2)}
+.heat i.l1{background:rgba(52,199,89,.35)}.heat i.l2{background:rgba(52,199,89,.65)}.heat i.l3{background:var(--moss)}
+
+/* ---------- papan tulis = sheet iOS ---------- */
+.wpad{align-items:flex-end;background:rgba(0,0,0,.35)}
+.wbox{border-radius:14px 14px 0 0;background:var(--paper);box-shadow:0 -10px 30px rgba(0,0,0,.15)}
+@media(min-width:861px){.wpad{align-items:center}.wbox{border-radius:14px}}
+
+/* ---------- ponsel: nav bar & tab bar ala iOS ---------- */
+@media(max-width:860px){
+  main{padding:8px 16px calc(96px + env(safe-area-inset-bottom))}
+  .topbar{background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid var(--sep);padding:calc(6px + env(safe-area-inset-top)) 12px 6px;min-height:44px}
+  .topbar .brand b{font:600 17px var(--sans)}
+  .topbar .seal{width:28px;height:28px;font-size:1rem;border-radius:7px}
+  .topbar .gear{color:var(--tint)}
+  .tabbar{background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--sep)}
+  .tabbar a{color:#999;font-size:10px;font-weight:500;gap:2px;padding:7px 0 5px;min-height:49px}
+  .tabbar svg{width:25px;height:25px;stroke-width:1.8}
+  .tabbar a.on{color:var(--tint);font-weight:600}
+  .tabbar a.on svg{stroke-width:2.2}
+  h1{font-size:30px;line-height:36px}
+  .pagehead{flex-direction:column;align-items:stretch;gap:12px}
+  .pagehead .chips[role="group"]{display:flex;width:100%}
+  .pagehead .chips[role="group"] .chip{flex:1}
+  .btn,.opt,.rate button{min-height:44px}
+  .chip{min-height:32px}
+}
+/* iOS: kotak statistik = tile terpisah */
+.stats{gap:8px;background:none;border:0;border-radius:0;overflow:visible}
+.stat{padding:12px 14px}
+.stat b{font-size:28px;font-weight:700;letter-spacing:-.02em}
+.kn{border:0;border-radius:10px}
+.loop div{border:0;background:var(--card);border-radius:12px;margin:0}
+.loop{gap:8px}
+.loop div::before{font-family:var(--sans);font-weight:700;color:var(--tint)}
+.score b{font-family:var(--sans);font-weight:700}
+.vl i{border:0;background:var(--fill);border-radius:6px}
+.vl i.on{background:var(--shu-bg);color:var(--tint)}
+/* iOS: baris tipe soal & target = satu grouped list */
+.plist,section>.prow{gap:0}
+.plist{border-radius:12px;overflow:hidden;background:var(--card)}
+.plist .prow{border-radius:0;position:relative;box-shadow:none}
+.plist .prow+.prow::before,a.prow+a.prow::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:.5px solid var(--sep)}
+.plist .prow:hover{background:var(--fill);box-shadow:none}
+section>a.prow{border-radius:0;margin:0;position:relative}
+section>a.prow:first-of-type{border-radius:12px 12px 0 0}section>a.prow:last-of-type{border-radius:0 0 12px 12px}
+.prow::after{content:"›";font-size:22px;line-height:1;color:var(--ink3);margin-left:4px}
+.prow{grid-template-columns:auto 1fr auto auto}
+a.prow{grid-template-columns:1fr auto auto}
+@media (max-width:760px){.prow{grid-template-columns:1fr auto auto}}
+
+/* halaman Pasang aplikasi */
+.ibox{padding:16px;margin-bottom:12px}
+.ibox h3{margin:0 0 10px}
+.istep{display:flex;gap:12px;align-items:flex-start;padding:8px 0}
+.istep+.istep{border-top:.5px solid var(--sep)}
+.istep b{display:block;font-weight:600}
+.istep small{display:block;color:var(--ink2);font-size:13px;margin-top:2px}
+.inum{flex:none;width:24px;height:24px;border-radius:50%;background:var(--tint);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}
+.ishare{width:20px;height:20px;vertical-align:-4px;color:var(--tint)}
+.ibtn{width:100%}
+.ilink{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.iurl{display:block;font-size:17px;color:var(--tint);word-break:break-all}
+.ibtns{display:flex;gap:8px}
+.iok{box-shadow:inset 0 0 0 1.5px var(--moss)}.iok b{color:var(--gtext);display:block}.iok small{color:var(--ink2)}
+.opt.bad,.opt.ok,.opt.on{border:0;outline:none}
+.opt:focus{outline:none}
