@@ -1,6 +1,6 @@
-const CACHE = 'nihongo-michi-v16';
+const CACHE = 'nihongo-michi-v17';
 const FILES = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest', 'icon.svg',
-  'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png',
+  'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'icons/qr-pasang.svg',
   'data/n5.js', 'data/n4.js', 'data/n3.js', 'data/n2.js', 'data/n1.js',
   'data/n5-plus.js', 'data/n4-plus.js', 'data/n3-plus.js', 'data/n2-plus.js', 'data/n1-plus.js',
   'data/n5-more-a.js', 'data/n5-more-b.js', 'data/n5-more-c.js', 'data/n4-more-a.js', 'data/n4-more-b.js', 'data/n4-more-c.js', 'data/n3-more-a1.js', 'data/n3-more-a2.js', 'data/n3-more-b.js', 'data/n3-more-c.js', 'data/n2-more-a1.js', 'data/n2-more-a2.js', 'data/n2-more-b.js', 'data/n2-more-c.js', 'data/n1-more-a1.js', 'data/n1-more-a2.js', 'data/n1-more-b.js', 'data/n1-more-c.js', 'data/daily-4.js', 'data/daily-5.js',

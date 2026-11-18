@@ -1174,6 +1174,7 @@ function vInstall() {
   const order = d.os === 'ios' ? [ios, android] : d.os === 'android' ? [android, ios] : [desk, ios, android];
   return `<header class="pagehead"><div><p class="eyebrow">Pasang aplikasi</p><h1>Michi di ponselmu</h1><p>Gratis, tanpa App Store atau Play Store. Setelah dipasang, Michi terbuka layar penuh dari ikon di layar utama dan tetap jalan tanpa internet.</p></div></header>
   ${on ? '<div class="card ibox iok"><b>✓ Sudah terpasang</b><small>Kamu sedang membuka Michi sebagai aplikasi.</small></div>' : ''}
+  <div class="card ibox iqrbox"><img class="iqr" src="icons/qr-pasang.svg" width="160" height="160" alt="Kode QR menuju halaman Pasang aplikasi"><div><b>Pindai dengan kamera ponsel</b><small>Arahkan kamera iPhone atau Android ke kode ini, lalu ketuk tautan yang muncul. Halaman ini akan terbuka di ponsel dengan langkah pasangnya.</small></div></div>
   <div class="card ibox ilink"><div><span class="tiny">Tautan untuk dibagikan</span><b class="iurl">${APP_URL.replace('https://', '')}</b></div>
     <div class="ibtns"><button class="btn ghost" data-act="icopy">Salin</button>${navigator.share ? '<button class="btn ghost" data-act="ishare">Bagikan</button>' : ''}</div></div>
   ${order.join('')}
