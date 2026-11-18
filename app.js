@@ -76,7 +76,9 @@ const sched = (r0, g) => {
   r.d = dayIdx() + r.i; return r;
 };
 const dueOf = lv => cardsOf(lv).filter(c => S.srs[c.id] && S.srs[c.id].d <= dayIdx());
-const newLeft = lv => Math.max(0, Math.min(S.newPerDay - (today().new || 0), cardsOf(lv).filter(c => !S.srs[c.id]).length));
+/* batas kartu baru dihitung PER LEVEL: tiap level N5–N1 punya jatah newPerDay sendiri setiap hari */
+const newLeft = lv => Math.max(0, Math.min(S.newPerDay - ((today().newLv || {})[lv] || 0), cardsOf(lv).filter(c => !S.srs[c.id]).length));
+{ const t0 = S.days[dayKey()]; if (t0 && t0.new && !t0.newLv) t0.newLv = { [S.level]: t0.new }; }
 let C = null; // card session
 
 /* ---------- router ---------- */
@@ -186,6 +188,7 @@ function vCards() {
   <div class="stage">${fin}<div class="card" style="text-align:center;padding:36px 20px">
     <div class="stats" style="margin-bottom:24px"><div class="stat"><b class="num">${due}</b><span>jatuh tempo</span></div><div class="stat"><b class="num">${nl}</b><span>kartu baru hari ini</span></div></div>
     <button class="btn shu" data-act="cstart" ${due + nl ? '' : 'disabled'}>${due + nl ? 'Mulai sesi' : 'Semua beres untuk hari ini'}</button>
+    ${(() => { const oth = LV.filter(l => l !== lv).map(l => [l, dueOf(l).length + newLeft(l)]).filter(x => x[1]); return oth.length ? `<p class="tiny" style="margin:18px 0 8px">${due + nl ? 'Level lain yang masih punya kartu hari ini:' : `Level ${lv} beres. Lanjut ke level lain:`}</p><div class="chips" style="justify-content:center">${oth.map(x => `<button class="chip" data-act="lv" data-v="${x[0]}">${x[0]} · ${x[1]} kartu</button>`).join('')}</div>` : ''; })()}
     <p class="tiny" style="margin-top:14px">Batas kartu baru per hari diatur di Panduan &amp; setelan.</p></div></div>`;
 }
 function cardView() {
@@ -559,7 +562,7 @@ const acts = {
   cflip() { if (C) { C.flip = !C.flip; render(); } },
   cquit() { if (C) C.q = []; render(); },
   rate(el) { if (!C || !C.flip) return; const g = +el.dataset.g, c = C.q[C.i], isNew = !S.srs[c.id];
-    S.srs[c.id] = sched(S.srs[c.id] || {}, g); if (isNew) { if (C.lv === 'AX') today().axnew = (today().axnew || 0) + 1; else today().new++; }
+    S.srs[c.id] = sched(S.srs[c.id] || {}, g); if (isNew) { if (C.lv === 'AX') today().axnew = (today().axnew || 0) + 1; else { const t = today(); t.new++; t.newLv = t.newLv || {}; t.newLv[C.lv] = (t.newLv[C.lv] || 0) + 1; } }
     bump('cards', 1, g ? 2 : 0); C.done++; if (g === 0) C.q.push(c); C.i++; C.flip = false; render(); },
   qlisten() { const lv = S.level, hand = pick(D[lv].questions.filter(q => q.t === 'listen'), 8);
     startQuiz({ title:`Mendengar ${lv}`, qs:hand.concat(genL(lv, hand.length ? 4 : 10)), mode:'practice', lv }); },
